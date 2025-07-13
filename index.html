@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darrou impress - Boutique en ligne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        secondary: '#f97316',
+                        whatsapp: '#25D366',
+                        wave: '#6C5CE7',
+                        orange: '#FF6B00',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .animate-pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cart-item {
+            transition: all 0.3s ease;
+        }
+        .cart-item:hover {
+            background-color: #f9fafb;
+        }
+        
+        .carousel-container {
+            display: flex;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+        }
+        
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+            will-change: transform;
+        }
+        
+        .carousel-item {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .carousel-item::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background-color: #4f46e5;
+            width: 30px;
+            border-radius: 5px;
+        }
+          .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+          .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            display: none;
+            background: rgba(79, 70, 229, 0.8);
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-top:hover {
+            background: #4f46e5;
+            transform: translateY(-5px);
+            }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Bouton WhatsApp flottant -->
+    <a href="https://wa.me/2250700000000?text=Bonjour%2C%20je%20souhaite%20commander%20sur%20votre%20site" 
+       target="_blank"
+       class="whatsapp-float bg-whatsapp text-white rounded-full p-4 shadow-lg">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Navigation mobile -->
+    <div class="mobile-menu fixed inset-0 bg-white z-20 p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-8">
+            <a href="#" class="text-2xl font-bold text-primary">Darrou Impress</a>
+            <button class="close-menu text-gray-600">
+                <i class=" fa-times text-2xl"></i>
+            </button>
+        </div>
+        
+      
+        
+        <div class="mt-8 pt-8 border-t border-gray-200">
+            <h3 class="text-lg font-bold mb-4">Suivez-nous</h3>
+            <div class="flex space-x-4">
+                <a href="#" class="bg-gray-100 p-3 rounded-full">
+                    <i class="fab fa-facebook-f text-gray-700"></i>
+                </a>
+                <a href="#" class="bg-gray-100 p-3 rounded-full">
+                    <i class="fab fa-instagram text-gray-700"></i>
+                </a>
+                <a href="#" class="bg-gray-100 p-3 rounded-full">
+                    <i class="fab fa-twitter text-gray-700"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header simplifié -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-4 w-full">
+                <button class="menu-toggle md:hidden text-gray-600">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <a href="#" class="text-2xl font-bold text-primary">Darrou Impress</a>
+                
+                <!-- Navigation principale (remplace la barre de recherche) -->
+                <nav class="hidden md:flex space-x-6 ml-6">
+                    <a href="#" class="text-gray-700 hover:text-primary font-medium">Accueil</a>
+                    <a href="#" class="text-gray-700 hover:text-primary font-medium">À propos</a>
+                    <a href="#" class="text-gray-700 hover:text-primary font-medium">Contact</a>
+                </nav>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 relative">
+                    <i class="fas fa-heart text-xl"></i>
+                </button>
+                <button class="cart-toggle text-gray-600 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full animate-pulse">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Panier latéral -->
+    <div id="cart-sidebar" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden">
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-xl overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Votre Panier</h3>
+                    <button class="close-cart text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div id="cart-items-container" class="space-y-4 mb-6">
+                    <div class="text-center py-8">
+                        <i class="fas fa-shopping-cart text-gray-300 text-4xl mb-4"></i>
+                        <p class="text-gray-500">Votre panier est vide</p>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-4 mb-6">
+                    <div class="flex justify-between font-bold text-lg mb-2">
+                        <span>Sous-total:</span>
+                        <span id="cart-subtotal">0 cfa</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600 mb-4">
+                        <span>Livraison:</span>
+                        <span>Gratuite</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-xl">
+                        <span>Total:</span>
+                        <span id="cart-total" class="text-primary">0 cfa</span>
+                    </div>
+                </div>
+                
+                <a id="whatsapp-order-btn" href="#" 
+                   target="_blank"
+                   class="block w-full bg-whatsapp text-white text-center py-3 rounded-lg mb-4 hover:bg-green-700 transition duration-300">
+                    <i class="fab fa-whatsapp mr-2"></i> Commander via WhatsApp
+                </a>
+                
+                <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                    <h4 class="font-bold mb-3">Paiement par Mobile Money</h4>
+                    
+                    <div class="flex items-center mb-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <div class="w-10 h-10 bg-wave rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-money-bill-wave text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium">Payer avec Wave</p>
+                            <p class="text-sm text-gray-600">Numéro: <span class="font-mono">+225 01 02 03 04 05</span></p>
+                        </div>
+                        <div class="ml-2">
+                            <input type="radio" name="payment" id="wave" checked>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded-lg border border-gray-200">
+                        <div class="w-10 h-10 bg-orange rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-mobile-alt text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium">Payer avec Orange Money</p>
+                            <p class="text-sm text-gray-600">Numéro: <span class="font-mono">+225 07 08 09 10 11</span></p>
+                        </div>
+                        <div class="ml-2">
+                            <input type="radio" name="payment" id="orange">
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs mt-3 text-gray-600">Après paiement, veuillez envoyer la capture du paiement via WhatsApp au +225 05 05 05 05 05.</p>
+                </div>
+                
+                <button class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition duration-300">
+                    Valider la commande
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bannière principale avec vidéo -->
+    <section class="relative h-[500px] flex items-center justify-center overflow-hidden">
+        <video autoplay muted loop class="video-background">
+            <source src="WhatsApp Vidéo 2025-05-28 à 17.03.07_725c6c38.mp4" type="video/mp4">
+           
+        </video>
+        <div class="video-overlay"></div>
+        <div class="relative z-10 text-center text-white px-4">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">BIENVENU CHEZ DARROU IMPRESS</h1>
+        </div>
+    </section>
+
+    <!-- Produits en vedette -->
+    <section class="py-8 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">Nos Produits </h2>
+                
+            </div>
+            
+            <!-- Grille de produits -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Produit 1 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="T-shirt" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
+                                -20%
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">T-shirt à logo</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(24)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-primary">249 cfa</span>
+                                <span class="text-gray-500 text-sm line-through ml-2">319 cfa</span>
+                            </div>
+                           <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                        data-name="T-shirt à logo"
+                        data-price="249"
+                        data-image="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                        <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                    </button>
+
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Produit 2 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chaussures" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">Baskets Urban</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(18)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-gray-900">599 cfa</span>
+                            </div>
+                           <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                                data-name="Baskets Urban"
+                                data-price="599"
+                                data-image="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                            </button>
+
+                        </div>
+                    </a>
+                </div>
+                <!-- Produit 1 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="T-shirt" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
+                                -20%
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">T-shirt à logo</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(24)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-primary">249 cfa</span>
+                                <span class="text-gray-500 text-sm line-through ml-2">319 cfa</span>
+                            </div>
+                          <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                            data-name="T-shirt à logo"
+                            data-price="249"
+                            data-image="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                            <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                        </button>
+
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Produit 2 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chaussures" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">Baskets Urban</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(18)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-gray-900">599 cfa</span>
+                            </div>
+                            <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                                data-name="Baskets Urban"
+                                data-price="599"
+                                data-image="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                <!-- Produit 3 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Jean" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-2 left-2 bg-secondary text-white text-xs px-2 py-1 rounded">
+                                Nouveau
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">Jean Slim Fit</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(32)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-gray-900">459 cfa</span>
+                            </div>
+                            <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                                data-name="Baskets Urban"
+                                data-price="599"
+                                data-image="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Produit 4 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sac à main" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
+                                -15%
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">Sac en cuir</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(12)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-primary">899 cfa</span>
+                                <span class="text-gray-500 text-sm line-through ml-2">1059 cfa</span>
+                            </div>
+                           <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                                data-name="Baskets Urban"
+                                data-price="599"
+                                data-image="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                            </button>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+       <!-- Groupe de produits 2 -->
+                        <div class="carousel-item">
+                            <!-- Produit 5 -->
+                            <div class="flex-shrink-0 w-64 mr-4">
+                                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card">
+                                    <a href="#">
+                                        <img src="il_1588xN.1511097530_htho.avif" alt="Chaussures de sport" class="w-full h-48 object-cover">
+                                        <div class="p-4">
+                                            <h3 class="font-medium text-gray-900 mb-1">Chaussures de sport</h3>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-lg font-bold text-gray-900">799 cfa</span>
+                                               
+
+                                                <button class="add-to-cart bg-primary text-white p-2 rounded-full hover:bg-indigo-700 transition duration-300"
+                                                    data-name="Chaussures de sport"
+                                                    data-price="799"
+                                                    data-image="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </button>
+                                                 
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Produit 6 -->
+                            <div class="flex-shrink-0 w-64 mr-4">
+                                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card">
+                                    <a href="#">
+                                        <img src="il_1588xN.1511097530_htho.avif" alt="Veste" class="w-full h-48 object-cover">
+                                        <div class="p-4">
+                                            <h3 class="font-medium text-gray-900 mb-1">Veste légère</h3>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-lg font-bold text-gray-900">899 cfa</span>
+                                                <button class="add-to-cart bg-primary text-white p-2 rounded-full hover:bg-indigo-700 transition duration-300"
+                                                    data-name="Chaussures de sport"
+                                                    data-price="899"
+                                                    data-image="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </button>
+                                                 
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Produit 7 -->
+                            <div class="flex-shrink-0 w-64 mr-4">
+                                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card">
+                                    <a href="#">
+                                        <img src="th (2).jpeg" alt="Bottes" class="w-full h-48 object-cover">
+                                        <div class="p-4">
+                                            <h3 class="font-medium text-gray-900 mb-1">Bottes en cuir</h3>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-lg font-bold text-gray-900">12999 cfa</span>
+                                               <button class="add-to-cart bg-primary text-white p-2 rounded-full hover:bg-indigo-700 transition duration-300"
+                                                    data-name="Chaussures de sport"
+                                                    data-price="799"
+                                                    data-image="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </button>
+                                                 
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Produit 8 -->
+                            <div class="flex-shrink-0 w-64">
+                                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card">
+                                    <a href="#">
+                                        <img src="th (5).jpeg" alt="Sac à dos" class="w-full h-48 object-cover">
+                                        <div class="p-4">
+                                            <h3 class="font-medium text-gray-900 mb-1">Sac à dos</h3>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-lg font-bold text-gray-900">499 cfa</span>
+                                               <button class="add-to-cart bg-primary text-white p-2 rounded-full hover:bg-indigo-700 transition duration-300"
+                                                    data-name="Chaussures de sport"
+                                                    data-price="799"
+                                                    data-image="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </button>
+                                                 
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                             <!-- Produit 8 -->
+                            <div class="flex-shrink-0 w-64">
+                                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card">
+                                    <a href="#">
+                                        <img src="WhatsApp Image 2025-05-27 à 13.58.29_380920b5.jpg" alt="Sac à dos" class="w-full h-48 object-cover">
+                                        <div class="p-4">
+                                            <h3 class="font-medium text-gray-900 mb-1">Sac à dos</h3>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-lg font-bold text-gray-900">4999 cfa</span>
+                                                <button class="add-to-cart bg-primary text-white p-2 rounded-full hover:bg-indigo-700 transition duration-300"
+                                                    data-name="Chaussures de sport"
+                                                    data-price="799"
+                                                    data-image="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </button>
+                                                 
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                          <!-- Produits en vedette -->
+    <section class="py-8 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">Produits populaires</h2>
+                <a href="#" class="text-primary font-medium">Voir tout</a>
+            </div>
+            
+            <!-- Grille de produits -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Produit 1 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="T-shirt" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
+                                -20%
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">T-shirt à logo</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(24)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-primary">249 cfa</span>
+                                <span class="text-gray-500 text-sm line-through ml-2">319 cfa</span>
+                            </div>
+                           <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                        data-name="T-shirt à logo"
+                        data-price="249"
+                        data-image="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                        <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                    </button>
+
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Produit 2 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chaussures" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">Baskets Urban</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(18)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-gray-900">599 cfa</span>
+                            </div>
+                           <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                                data-name="Baskets Urban"
+                                data-price="599"
+                                data-image="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                            </button>
+
+                        </div>
+                    </a>
+                </div>
+                <!-- Produit 1 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="T-shirt" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
+                                -20%
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">T-shirt à logo</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(24)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-primary">249 cfa</span>
+                                <span class="text-gray-500 text-sm line-through ml-2">319 cfa</span>
+                            </div>
+                          <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                            data-name="T-shirt à logo"
+                            data-price="249"
+                            data-image="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                            <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                        </button>
+
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Produit 2 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chaussures" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">Baskets Urban</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(18)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-gray-900">599 cfa</span>
+                            </div>
+                            <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                                data-name="Baskets Urban"
+                                data-price="599"
+                                data-image="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                <!-- Produit 3 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Jean" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-2 left-2 bg-secondary text-white text-xs px-2 py-1 rounded">
+                                Nouveau
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">Jean Slim Fit</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(32)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-gray-900">459 cfa</span>
+                            </div>
+                            <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                                data-name="Baskets Urban"
+                                data-price="599"
+                                data-image="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Produit 4 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm product-card transition duration-300">
+                    <a href="#">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sac à main" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2">
+                                <button class="bg-white rounded-full p-2 shadow-md text-gray-500 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
+                                -15%
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">Sac en cuir</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">(12)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold text-primary">899 cfa</span>
+                                <span class="text-gray-500 text-sm line-through ml-2">1059 cfa</span>
+                            </div>
+                           <button class="add-to-cart w-full mt-3 bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+                                data-name="Baskets Urban"
+                                data-price="599"
+                                data-image="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                                <i class="fas fa-shopping-cart mr-2"></i>Ajouter au panier
+                            </button>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section> 
+    <!-- Services -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-lg p-6 flex items-center">
+                    <div class="bg-primary/10 p-3 rounded-full mr-4">
+                        <i class="fas fa-truck text-primary text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-1">Livraison rapide</h3>
+                        <p class="text-gray-600">Livraison en 24-48h partout en France</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 flex items-center">
+                    <div class="bg-primary/10 p-3 rounded-full mr-4">
+                        <i class="fas fa-undo text-primary text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-1">Retours gratuits</h3>
+                        <p class="text-gray-600">30 jours pour changer d'avis</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 flex items-center">
+                    <div class="bg-primary/10 p-3 rounded-full mr-4">
+                        <i class="fas fa-shield-alt text-primary text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-1">Paiement sécurisé</h3>
+                        <p class="text-gray-600">Transactions cryptées et protégées</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Darrou impress</h3>
+                    <p class="text-gray-400 mb-4">Votre destination shopping préférée pour les dernières tendances mode à portée de main.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+               
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Informations</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Conditions d'utilisation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Politique de confidentialité</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Livraison</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Retours</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3"></i>
+                            <span>123 Rue de la Mode, Paris 75001</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone mt-1 mr-3"></i>
+                            <span>+33 1 23 45 67 89</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3"></i>
+                            <span>contact@shopmobile.fr</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400">
+                <p>&copy; 2023 Darrou Impress. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Gestion du panier
+        let cartItems = [];
+        const cartCount = document.getElementById('cart-count');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const cartSubtotal = document.getElementById('cart-subtotal');
+        const cartTotal = document.getElementById('cart-total');
+        const whatsappOrderBtn = document.getElementById('whatsapp-order-btn');
+        
+        // Menu mobile
+        const menuToggle = document.querySelector('.menu-toggle');
+        const closeMenu = document.querySelector('.close-menu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+        
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) {
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Gestion du panier
+        const cartToggle = document.querySelector('.cart-toggle');
+        const closeCart = document.querySelector('.close-cart');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        
+        cartToggle.addEventListener('click', () => {
+            cartSidebar.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeCart.addEventListener('click', () => {
+            cartSidebar.classList.add('hidden');
+            document.body.style.overflow = '';
+        });
+        
+        cartSidebar.addEventListener('click', (e) => {
+            if (e.target === cartSidebar) {
+                cartSidebar.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Ajout au panier
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const product = {
+                    name: button.dataset.name,
+                    price: parseFloat(button.dataset.price),
+                    image: button.dataset.image,
+                    quantity: 1
+                };
+                
+                // Vérifier si le produit est déjà dans le panier
+                const existingItem = cartItems.find(item => item.name === product.name);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cartItems.push(product);
+                }
+                
+                // Mise à jour de l'interface
+                updateCart();
+                
+                // Animation de confirmation
+                button.innerHTML = '<i class="fas fa-check mr-2"></i> Ajouté au panier';
+                button.classList.remove('bg-primary', 'hover:bg-indigo-700', 'bg-gray-900', 'hover:bg-black');
+                button.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-shopping-cart mr-2"></i> Ajouter au panier';
+                    button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    
+                    if (button.classList.contains('bg-gray-900')) {
+                        button.classList.add('bg-gray-900', 'hover:bg-black');
+                    } else {
+                        button.classList.add('bg-primary', 'hover:bg-indigo-700');
+                    }
+                }, 2000);
+            });
+        });
+        
+        // Mise à jour du panier
+        function updateCart() {
+            // Mise à jour du compteur
+            const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Mise à jour du contenu du panier
+            cartItemsContainer.innerHTML = '';
+            
+            if (cartItems.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-shopping-cart text-gray-300 text-4xl mb-4"></i>
+                        <p class="text-gray-500">Votre panier est vide</p>
+                    </div>
+                `;
+                cartSubtotal.textContent = '0 F CFA';
+                cartTotal.textContent = '0 F CFA';
+                whatsappOrderBtn.href = '#';
+                return;
+            }
+            
+            let subtotal = 0;
+            
+            cartItems.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'cart-item flex items-center border-b pb-4';
+                cartItemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                    <div class="ml-4 flex-1">
+                        <h4 class="font-medium">${item.name}</h4>
+                        <div class="flex justify-between items-center mt-2">
+                           <p class="font-bold text-primary">${Math.round(itemTotal)} F CFA</p>
+
+                            <div class="flex items-center">
+                                <button class="decrease-quantity text-gray-500" data-index="${index}">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="mx-2">${item.quantity}</span>
+                                <button class="increase-quantity text-gray-500" data-index="${index}">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="remove-item text-gray-400 hover:text-red-500 ml-2" data-index="${index}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                cartItemsContainer.appendChild(cartItemElement);
+            });
+            
+            // Mise à jour des totaux
+           cartSubtotal.textContent = Math.round(subtotal) + ' F CFA';
+           cartTotal.textContent = Math.round(subtotal) + ' F CFA';
+
+            // Mise à jour du lien WhatsApp
+            updateWhatsAppLink();
+            
+            // Ajout des écouteurs d'événements pour les boutons dans le panier
+            document.querySelectorAll('.decrease-quantity').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('button').dataset.index);
+                    decreaseQuantity(index);
+                });
+            });
+            
+            document.querySelectorAll('.increase-quantity').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('button').dataset.index);
+                    increaseQuantity(index);
+                });
+            });
+            
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('button').dataset.index);
+                    removeItem(index);
+                });
+            });
+        }
+        
+        // Fonctions de gestion du panier
+        function decreaseQuantity(index) {
+            if (cartItems[index].quantity > 1) {
+                cartItems[index].quantity -= 1;
+            } else {
+                cartItems.splice(index, 1);
+            }
+            updateCart();
+        }
+        
+        function increaseQuantity(index) {
+            cartItems[index].quantity += 1;
+            updateCart();
+        }
+        
+        function removeItem(index) {
+            cartItems.splice(index, 1);
+            updateCart();
+        }
+        
+        // Mise à jour du lien WhatsApp
+        function updateWhatsAppLink() {
+            if (cartItems.length === 0) return;
+            
+            let message = "Bonjour, je souhaite commander les articles suivants :%0A%0A";
+            
+            cartItems.forEach(item => {
+                message += `- ${item.name} (x${item.quantity}) : ${Math.round(item.price * item.quantity)} F CFA%0A`;
+
+            });
+            
+            message += `%0ATotal : ${cartTotal.textContent}%0A%0AMerci !`;
+            
+            whatsappOrderBtn.href = `https://wa.me/221781199?text=${message}`;
+        }
+        
+      
+        
+        // Initialisation du carrousel
+        function initCarousel() {
+            // Démarrage du défilement automatique
+            autoCarouselInterval = setInterval(nextSlide, 5000);
+            
+            // Mise à jour des indicateurs
+            updateIndicators();
+            
+            // Ajout des écouteurs d'événements pour le glissement
+            carouselTrack.addEventListener('touchstart', handleTouchStart, { passive: true });
+            carouselTrack.addEventListener('touchmove', handleTouchMove, { passive: true });
+            carouselTrack.addEventListener('touchend', handleTouchEnd);
+            
+            carouselTrack.addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        }
+        
+        // Fonction pour passer au slide suivant
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % carouselItems.length;
+            updateCarouselPosition();
+            updateIndicators();
+        }
+        
+        // Fonction pour passer au slide précédent
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
+            updateCarouselPosition();
+            updateIndicators();
+        }
+        
+        // Mise à jour de la position du carrousel
+        function updateCarouselPosition() {
+            carouselTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+        
+        // Mise à jour des indicateurs
+        function updateIndicators() {
+            carouselIndicators.forEach((indicator, index) => {
+                if (index === currentIndex) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+        
+        // Gestion des événements tactiles
+        function handleTouchStart(e) {
+            startX = e.touches[0].clientX;
+            currentX = startX;
+            isDragging = true;
+            clearInterval(autoCarouselInterval);
+        }
+        
+        function handleTouchMove(e) {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            const diff = startX - currentX;
+            carouselTrack.style.transform = `translateX(calc(-${currentIndex * 100}% - ${diff}px))`;
+        }
+        
+        function handleTouchEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const diff = startX - currentX;
+            const threshold = 100; // Seuil de glissement pour changer de slide
+            
+            if (diff > threshold) {
+                nextSlide();
+            } else if (diff < -threshold) {
+                prevSlide();
+            } else {
+                updateCarouselPosition();
+            }
+            
+            // Redémarrer le défilement automatique
+            autoCarouselInterval = setInterval(nextSlide, 5000);
+        }
+        
+        // Gestion des événements souris
+        function handleMouseDown(e) {
+            startX = e.clientX;
+            currentX = startX;
+            isDragging = true;
+            clearInterval(autoCarouselInterval);
+            e.preventDefault();
+        }
+        
+        function handleMouseMove(e) {
+            if (!isDragging) return;
+            currentX = e.clientX;
+            const diff = startX - currentX;
+            carouselTrack.style.transform = `translateX(calc(-${currentIndex * 100}% - ${diff}px))`;
+        }
+        
+        function handleMouseUp() {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const diff = startX - currentX;
+            const threshold = 100; // Seuil de glissement pour changer de slide
+            
+            if (diff > threshold) {
+                nextSlide();
+            } else if (diff < -threshold) {
+                prevSlide();
+            } else {
+                updateCarouselPosition();
+            }
+            
+            // Redémarrer le défilement automatique
+            autoCarouselInterval = setInterval(nextSlide, 5000);
+        }
+        
+        // Initialisation du carrousel au chargement
+        document.addEventListener('DOMContentLoaded', initCarousel);
+    </script>
+</body>
+</html>

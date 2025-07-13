@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="c:\Users\Lenovo\Documents\cours html\8346903-uhd_3840_2160_25fps (1).mp4">
+    <title>Maison - Boutique en ligne</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .cart-icon {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+        }
+        .products-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .product-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 10px;
+        }
+        .product-title {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            height: 40px;
+            overflow: hidden;
+        }
+        .product-price {
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 5px 0;
+        }
+        .add-to-cart {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .cart-count {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Maison</h1>
+        <div class="cart-icon">
+            🛒 <span id="cart-count" class="cart-count">0</span>
+        </div>
+    </header>
+
+    <div class="products-container" id="products-container">
+        <!-- Produits seront ajoutés dynamiquement -->
+    </div>
+
+    <script>
+        // Données des produits
+        const products = [
+            { id: 1, name: "Lampe design", price: 49.99, image: "3d-rendering-beautiful-luxury-bedroom-suite-hotel-with-tv-working-table_105762-919.avif" },
+            { id: 2, name: "Coussin velours", price: 24.99, image: "3d-rendering-beautiful-luxury-bedroom-suite-hotel-with-tv-working-table_105762-919.avif" },
+            { id: 3, name: "Tapis rond", price: 89.99, image: "3d-rendering-beautiful-luxury-bedroom-suite-hotel-with-tv-working-table_105762-919.avif" },
+            { id: 4, name: "Plante artificielle", price: 34.99, image: "3d-rendering-beautiful-luxury-bedroom-suite-hotel-with-tv-working-table_105762-919.avif" },
+            { id: 5, name: "Miroir mural", price: 75.50, image: "3d-rendering-modern-design-marble-tile-toilet-bathroom_105762-355.avif deepseek_html_20250617_f2dd3b.html" },
+            { id: 6, name: "Chaise scandinave", price: 129.99, image: "small-bathroom-decorated-modern-style_23-2150836465.avif" },
+            { id: 7, name: "Table basse", price: 199.99, image: "https://via.placeholder.com/150?text=Table" },
+            { id: 8, name: "Rideaux en lin", price: 45.99, image: "https://via.placeholder.com/150?text=Rideaux" },
+            { id: 9, name: "Vase en céramique", price: 29.99, image: "https://via.placeholder.com/150?text=Vase" },
+            { id: 10, name: "Set de couverts", price: 59.99, image: "https://via.placeholder.com/150?text=Couverts" },
+            { id: 11, name: "Plateau en bois", price: 22.99, image: "https://via.placeholder.com/150?text=Plateau" },
+            { id: 12, name: "Pouf en cuir", price: 149.99, image: "https://via.placeholder.com/150?text=Pouf" },
+            { id: 13, name: "Horloge murale", price: 39.99, image: "https://via.placeholder.com/150?text=Horloge" },
+            { id: 14, name: "Set de linge de lit", price: 79.99, image: "https://via.placeholder.com/150?text=Linge" },
+            { id: 15, name: "Porte-manteau", price: 65.99, image: "https://via.placeholder.com/150?text=Porte-manteau" },
+            { id: 16, name: "Bougies parfumées", price: 19.99, image: "https://via.placeholder.com/150?text=Bougies" },
+            { id: 17, name: "Serviettes de bain", price: 34.99, image: "https://via.placeholder.com/150?text=Serviettes" },
+            { id: 18, name: "Range-revues", price: 27.99, image: "https://via.placeholder.com/150?text=Range-revues" },
+            { id: 19, name: "Couvercles en verre", price: 15.99, image: "https://via.placeholder.com/150?text=Couvercles" },
+            { id: 20, name: "Porte-savon", price: 12.99, image: "https://via.placeholder.com/150?text=Porte-savon" }
+        ];
+
+        // Panier
+        let cart = [];
+        
+        // Afficher les produits
+        const productsContainer = document.getElementById('products-container');
+        
+        products.forEach(product => {
+            const productElement = document.createElement('div');
+            productElement.className = 'product-card';
+            productElement.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">${product.name}</h3>
+                    <p class="product-price">${product.price.toFixed(2)} €</p>
+                    <button onclick="addToCart(${product.id})" class="add-to-cart">Ajouter au panier</button>
+                </div>
+            `;
+            productsContainer.appendChild(productElement);
+        });
+        
+        // Fonction pour ajouter au panier
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            updateCartCount();
+        }
+        
+        // Mettre à jour le compteur du panier
+        function updateCartCount() {
+            document.getElementById('cart-count').textContent = cart.length;
+        }
+    </script>
+</body>
+</html>
